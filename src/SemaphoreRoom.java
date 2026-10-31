@@ -20,8 +20,8 @@ public class SemaphoreRoom {
         notifyAll();
     }
 
-    public synchronized Boolean tryAcquire(Long timeoutMs) throws InterruptedException {
-        if (timeoutMs == null || timeoutMs < 0) {
+    public synchronized Boolean tryAcquire(long timeoutMs) throws InterruptedException {
+        if (timeoutMs < 0) {
             throw new IllegalArgumentException("Invalid timeoutMs");
         }
 
