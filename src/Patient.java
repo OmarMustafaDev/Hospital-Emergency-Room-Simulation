@@ -3,10 +3,12 @@ public class Patient extends Thread {
 
     private final int id;
     private final WaitingRoom waitingRoom;
+    private final EventLogger logger ;
 
-    public Patient(int id, WaitingRoom waitingRoom) {
+    public Patient(int id, WaitingRoom waitingRoom, EventLogger logger) {
         this.id = id;
         this.waitingRoom = waitingRoom;
+        this.logger=logger;
     }
 
     public int getPatientId() {
@@ -15,12 +17,16 @@ public class Patient extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Patient " + id + " arrived.");
+        logger.log("Patient " + id + " arrived.");
 
         try {
             waitingRoom.addPatient(this);
-        } catch (InterruptedException e) {
+        }catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }
+    }
+    @Override 
+    public String toString() {
+        return "Patient " + id;
     }
 }
