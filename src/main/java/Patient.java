@@ -17,7 +17,7 @@ public class Patient extends Thread {
 
     @Override
     public void run() {
-        logger.log("Patient " + id + " arrived.");
+        logger.log("P" + id + " arrived.");
 
         try {
             waitingRoom.addPatient(this);
@@ -27,6 +27,6 @@ public class Patient extends Thread {
     }
     @Override 
     public String toString() {
-        return "Patient " + id;
+        return "P" + id;
     }
 }

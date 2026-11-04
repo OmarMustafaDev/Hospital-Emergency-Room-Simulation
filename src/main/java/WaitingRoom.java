@@ -1,6 +1,7 @@
 public class WaitingRoom {
 
     private final int capacity;
+    private final EventLogger logger;
     private final Patient[] buffer;
     private int inPtr = 0;
     private int outPtr = 0;
@@ -11,9 +12,10 @@ public class WaitingRoom {
     private final Object prodLock=new Object();
     private final Object consLock=new Object();
 
-    public WaitingRoom(int capacity){
+    public WaitingRoom(int capacity, EventLogger logger) {
 
         this.capacity = capacity;
+        this.logger = logger;
         this.buffer = new Patient[capacity];
         this.emptySeats = new SemaphoreRoom(capacity);
         this.waitingPatients = new SemaphoreRoom(0);
@@ -23,8 +25,8 @@ public class WaitingRoom {
 
         if (!emptySeats.tryAcquire(0)){
 
-            System.out.println("The waiting room is full");
-            System.out.println(patient + " is waiting outside for an available seat");
+            logger.log("The waiting room is full");
+            logger.log(patient + " is waiting outside for an available seat");
 
             emptySeats.acquire();
         }
@@ -33,7 +35,7 @@ public class WaitingRoom {
         synchronized (prodLock){
             buffer[inPtr] = patient;
             inPtr = (inPtr + 1) % capacity;
-            System.out.println(patient + " entered the waiting room");
+            logger.log(patient + " entered the waiting room");
 
         }
         waitingPatients.release();
