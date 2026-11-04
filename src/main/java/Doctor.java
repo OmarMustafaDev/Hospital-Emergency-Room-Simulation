@@ -10,7 +10,10 @@ public class Doctor extends Thread {
     private final CountDownLatch treated;
 
     public Doctor(int id, WaitingRoom waitingRoom,
-                  TreatmentRoom treatmentRoom, EventLogger logger, CountDownLatch treated) {
+                  TreatmentRoom treatmentRoom,
+                  EventLogger logger,
+                  CountDownLatch treated) {
+
         this.id = id;
         this.waitingRoom = waitingRoom;
         this.treatmentRoom = treatmentRoom;
@@ -21,37 +24,74 @@ public class Doctor extends Thread {
     @Override
     public void run() {
 
-        while (true){
+        while (!isInterrupted()) {
+
             try {
+
                 Patient patient = waitingRoom.getNextPatient();
+
                 logger.log("Doctor " + id + " is assigned to " + patient + ".");
                 logger.log("Doctor " + id + " is trying to acquire a treatment room.");
 
 
                 if (!treatmentRoom.tryAcquire()) {
+
                     logger.log("Doctor " + id + " could not acquire a treatment room.");
-                    logger.log("Doctor " + id + " is sending " + patient + " back to the waiting room.");
-                    new Thread(() -> {
-                        try {
-                            waitingRoom.addPatient(patient);
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                        }
-                    }).start();
+
+
+                    returnPatientToWaitingRoom(patient);
+
                     logger.log("Doctor " + id + " is now available.");
+
                     continue;
                 }
-                try{
-                    int treatmentTime = ThreadLocalRandom.current().nextInt(2000,5001);
+
+
+                try {
+                    logger.log("Doctor " + id + " acquired a treatment room.");
+                    logger.log("Doctor " + id + " begins treating " + patient + ".");
+
+                    int treatmentTime =
+                            ThreadLocalRandom.current().nextInt(2000, 5001);
+
                     Thread.sleep(treatmentTime);
-                }finally {
+
+                    logger.log("Doctor " + id + " finished treating " + patient + ".");
+
+                } finally {
                     treatmentRoom.release();
+
+                    logger.log("Doctor " + id + " released the treatment room.");
                 }
+
+
+                logger.log("Doctor " + id + " is now available.");
+                logger.log(patient + " left.");
+
+
                 treated.countDown();
 
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 break;
             }
         }
+    }
+
+    private void returnPatientToWaitingRoom(Patient patient) {
+
+        logger.log("Doctor " + id + " is sending " + patient +
+                " back to the waiting room.");
+
+        Thread requeueThread = new Thread(() -> {
+            try {
+                waitingRoom.addPatient(patient);
+
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        requeueThread.start();
     }
 }
