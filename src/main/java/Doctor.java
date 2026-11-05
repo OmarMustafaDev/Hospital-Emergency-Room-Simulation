@@ -7,12 +7,12 @@ public class Doctor extends Thread {
     private final WaitingRoom waitingRoom;
     private final TreatmentRoom treatmentRoom;
     private final EventLogger logger;
-    private final CountDownLatch treated;
+    private final SemaphoreRoom treated;
 
     public Doctor(int id, WaitingRoom waitingRoom,
                   TreatmentRoom treatmentRoom,
                   EventLogger logger,
-                  CountDownLatch treated) {
+                  SemaphoreRoom treated) {
 
         this.id = id;
         this.waitingRoom = waitingRoom;
@@ -69,7 +69,7 @@ public class Doctor extends Thread {
                 logger.log(patient + " left.");
 
 
-                treated.countDown();
+                treated.release();
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

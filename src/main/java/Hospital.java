@@ -22,7 +22,7 @@ public class Hospital {
         EventLogger eventLogger = new EventLogger();
         WaitingRoom waitingRoom = new WaitingRoom(capacity, eventLogger);
         TreatmentRoom treatmentRoom = new TreatmentRoom();
-        CountDownLatch treated = new CountDownLatch(numPatients);
+        SemaphoreRoom treated = new SemaphoreRoom(0);
 
         Doctor[] doctors = new Doctor[numDoctors];
         Patient[] patients = new Patient[numPatients];
@@ -43,7 +43,9 @@ public class Hospital {
             patients[i].start();
         }
 
-        treated.await(); // Wait for all patients to be treated
+        for (int i = 0; i < numPatients; i++) {
+            treated.acquire();
+        } // Wait for all patients to be treated
 
         for (Doctor doctor : doctors) {
             doctor.interrupt();
