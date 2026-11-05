@@ -22,7 +22,7 @@ public class Hospital {
         EventLogger eventLogger = new EventLogger();
         WaitingRoom waitingRoom = new WaitingRoom(capacity, eventLogger);
         TreatmentRoom treatmentRoom = new TreatmentRoom();
-        SemaphoreRoom treated = new SemaphoreRoom(0);
+        Semaphore treated = new Semaphore(0);
 
         Doctor[] doctors = new Doctor[numDoctors];
         Patient[] patients = new Patient[numPatients];

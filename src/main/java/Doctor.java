@@ -7,12 +7,12 @@ public class Doctor extends Thread {
     private final WaitingRoom waitingRoom;
     private final TreatmentRoom treatmentRoom;
     private final EventLogger logger;
-    private final SemaphoreRoom treated;
+    private final Semaphore treated;
 
     public Doctor(int id, WaitingRoom waitingRoom,
                   TreatmentRoom treatmentRoom,
                   EventLogger logger,
-                  SemaphoreRoom treated) {
+                  Semaphore treated) {
 
         this.id = id;
         this.waitingRoom = waitingRoom;
