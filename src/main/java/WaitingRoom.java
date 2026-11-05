@@ -6,8 +6,8 @@ public class WaitingRoom {
     private int inPtr = 0;
     private int outPtr = 0;
 
-    private final SemaphoreRoom emptySeats;
-    private final SemaphoreRoom waitingPatients;
+    private final Semaphore emptySeats;
+    private final Semaphore waitingPatients;
 
     private final Object prodLock=new Object();
     private final Object consLock=new Object();
@@ -17,8 +17,8 @@ public class WaitingRoom {
         this.capacity = capacity;
         this.logger = logger;
         this.buffer = new Patient[capacity];
-        this.emptySeats = new SemaphoreRoom(capacity);
-        this.waitingPatients = new SemaphoreRoom(0);
+        this.emptySeats = new Semaphore(capacity);
+        this.waitingPatients = new Semaphore(0);
     }
 
     public void addPatient(Patient patient) throws InterruptedException{

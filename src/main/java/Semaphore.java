@@ -1,7 +1,7 @@
-public class SemaphoreRoom {
+public class Semaphore {
     private long permits;
 
-    public SemaphoreRoom(long value) {
+    public Semaphore(long value) {
         if (value < 0) {
             throw new IllegalArgumentException("Permits cannot be negative");
         }

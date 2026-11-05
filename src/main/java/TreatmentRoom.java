@@ -1,7 +1,7 @@
 public class TreatmentRoom {
-    private final SemaphoreRoom rooms ;
+    private final Semaphore rooms ;
     public TreatmentRoom() {
-        rooms = new SemaphoreRoom(2);
+        rooms = new Semaphore(2);
     }
     public boolean tryAcquire()throws InterruptedException{
         
