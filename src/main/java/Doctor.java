@@ -1,5 +1,4 @@
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.CountDownLatch;
 
 public class Doctor extends Thread {
 
